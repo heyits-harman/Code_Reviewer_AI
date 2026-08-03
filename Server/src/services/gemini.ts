@@ -1,8 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { ChangedFile, ReviewIssue } from '../types/review'
-import dotenv from 'dotenv';
-
-dotenv.config();
+import type { ChangedFile, ReviewIssue } from '../types/review'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const SYSTEM_INSTRUCTION = `You are a senior code reviewer. You will be given a git diff (unified patch format) for one file, and optionally the full file content for extra context.
@@ -33,7 +30,7 @@ const model = genAI.getGenerativeModel({
 })
 
 function extractJson(rawText: string){
-  const cleaned = rawText.replace("/```json|```/g", "").trim();
+  const cleaned = rawText.replace(/```json|```/g, "").trim();
   return JSON.parse(cleaned);
 }
 
@@ -70,4 +67,17 @@ export async function reviewFile(file: ChangedFile): Promise<ReviewIssue[]> {
     console.error(`Gemini review failed for ${file.fileName}:`, err)
     return [];
  }
+}
+
+export async function reviewAllFiles(files: ChangedFile[]): Promise<ReviewIssue[]> {
+  const BATCH_SIZE = 4;
+  const result: ReviewIssue[] = [];
+
+  for(let i = 0; i < files.length; i += BATCH_SIZE){
+    const batch = files.slice(i, i + BATCH_SIZE);
+    const batchResults = await Promise.all(batch.map(reviewFile));
+    result.push(...batchResults.flat());
+  }
+
+  return result;
 }
