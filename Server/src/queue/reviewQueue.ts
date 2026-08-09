@@ -1,5 +1,5 @@
 import { Queue } from "bullmq";
-import type { ReviewJobPayload } from "../types/review"
+import type { ReviewJobPayload } from "../types/review.js"
 
 const redisUrl = new URL(process.env.REDIS_URL!);
 

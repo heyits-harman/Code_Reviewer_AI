@@ -1,19 +1,14 @@
 import express from 'express';
 import 'dotenv/config';
 import webhookRouter from './routes/webhook.js';
-
 const app = express();
-
 app.use('/webhook', webhookRouter);
-
 app.use(express.json());
-
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: "OK", service: "ai-pr-reviewer" });
-})
-
+    res.status(200).json({ status: "OK", service: "ai-pr-reviewer" });
+});
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`)
-})
+    console.log(`Server listening on port ${PORT}`);
+});
+//# sourceMappingURL=index.js.map

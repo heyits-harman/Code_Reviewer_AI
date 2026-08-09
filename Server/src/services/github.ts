@@ -1,5 +1,5 @@
 import { App } from '@octokit/app';
-import type { ChangedFile } from '../types/review';
+import type { ChangedFile } from '../types/review.js';
 import dotenv from 'dotenv';
 
 dotenv.config();

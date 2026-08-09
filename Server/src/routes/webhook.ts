@@ -1,6 +1,6 @@
 import express, { Router, Request, Response } from 'express';
 import crypto from 'crypto';
-import { reviewQueue } from './reviewQueue';
+import { reviewQueue } from '../queue/reviewQueue.js';
 
 const router = Router();
 function verifySignature(payload: Buffer, signature: string | undefined): boolean{

@@ -1,9 +1,9 @@
 import "dotenv/config";
 import { Worker, Job } from "bullmq";
-import { connection } from "./reviewQueue";
-import { fetchChangedFiles, getLatestCommitSha, postReviews }from "../services/github";
-import { reviewAllFiles } from "../services/gemini";
-import type { ReviewJobPayload } from "../types/review"
+import { connection } from "./reviewQueue.js";
+import { fetchChangedFiles, getLatestCommitSha, postReviews }from "../services/github.js";
+import { reviewAllFiles } from "../services/gemini.js";
+import type { ReviewJobPayload } from "../types/review.js"
 
 const worker = new Worker<ReviewJobPayload>(
   'pr-review', async (job: Job<ReviewJobPayload>) => {
