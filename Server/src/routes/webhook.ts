@@ -31,24 +31,32 @@ router.post("/github",
     if(!verifySignature(rawBody, signature)){
       return res.status(401).send("Invalid signature");
     }
+    
+    console.log("[webhook] Signature verified");
 
     const event = req.headers["x-github-event"];
     const data = JSON.parse(rawBody.toString("utf-8"));
+
+    console.log(`[webhook] Event: ${event}, Action: ${data.action}`);
 
     res.status(200).send("ok");
 
     if(event === "pull_request" && ["opened", "synchronize"].includes(data.action)){
       try{
+        console.log(`[webhook] Processing PR: ${data.repository.full_name}#${data.pull_request.number}`);
         await reviewQueue.add("review-pr", {
           installationId: data.installation.id,
           owner: data.repository.owner.login,
           repo: data.repository.name,
           prNumber: data.pull_request.number,
         })
+        console.log(`[webhook] Job queued successfully`);
         console.log(`[webhook] Queued review for ${data.repository.full_name}#${data.pull_request.number}`);
       } catch(err){
         console.error("[webhook] Failed to enqueue review job:", err);
       }
+    } else{
+      console.log(`[webhook] Ignoring event: ${event} with action: ${data.action}`);
     }
   }
 );
