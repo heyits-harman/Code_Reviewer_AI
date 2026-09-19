@@ -26,7 +26,11 @@ router.post("/github",
   async (req: Request, res: Response) => {
 
     const signature = req.headers["x-hub-signature-256"] as string | undefined;
-    const rawBody = req.body as Buffer;
+    const rawBody = req.body;
+
+    if(!Buffer.isBuffer(rawBody)){
+      return res.status(400).send("Request body must be raw");
+    }
 
     if(!verifySignature(rawBody, signature)){
       return res.status(401).send("Invalid signature");

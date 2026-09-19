@@ -61,7 +61,7 @@ export async function fetchChangedFiles(
         }
 
       } catch(err){
-        console.log(`ℹ️ Skipping full content for ${file.filename}`);
+        console.log(`Skipping full content for ${file.filename}`);
       }
     }
     result.push({
@@ -120,4 +120,17 @@ export async function postReviews(
     event: "COMMENT",
     body: `🤖 AI review complete — ${comments.length} issue(s) found.`
   })
+
+  for (const comment of comments) {
+    await octokit.request("POST /repos/{owner}/{repo}/pulls/{pull_number}/comments", {
+      owner,
+      repo,
+      pull_number: prNumber,
+      commit_id: commitId,
+      path: comment.path,
+      line: comment.line,
+      side: "RIGHT",
+      body: comment.body,
+    })
+  }
 }

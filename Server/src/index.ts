@@ -4,9 +4,9 @@ import webhookRouter from './routes/webhook.js';
 
 const app = express();
 
-app.use('/webhook', webhookRouter);
-
 app.use(express.json());
+
+app.use('/webhook', webhookRouter);
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: "OK", service: "ai-pr-reviewer" });
