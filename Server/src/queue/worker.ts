@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "../config.js";
 import { Worker, Job } from "bullmq";
 import { connection } from "./reviewQueue.js";
 import { fetchChangedFiles, getLatestCommitSha, postReviews }from "../services/github.js";

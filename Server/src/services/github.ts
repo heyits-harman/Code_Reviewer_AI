@@ -1,8 +1,5 @@
 import { App } from '@octokit/app';
 import type { ChangedFile } from '../types/review.js';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 function getPrivateKey(): string {
   const b64 = process.env.GITHUB_PRIVATE_KEY_B64;
